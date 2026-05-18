@@ -134,11 +134,18 @@ function parseFecha(fechaStr,horaStr){
   return null;
  }
 
- const partesHora = horaStr.split(":");
+     const partesHora = horaStr.split(":");
 
- fecha.setHours(partesHora[0]);
- fecha.setMinutes(partesHora[1]);
- fecha.setSeconds(0);
+     if(partesHora.length !== 2) return null;
+
+     const horas = parseInt(partesHora[0]);
+     const minutos = parseInt(partesHora[1]);
+
+     if(isNaN(horas) || isNaN(minutos)) return null;
+
+     fecha.setHours(horas);
+     fecha.setMinutes(minutos);
+     fecha.setSeconds(0);
 
  if(fecha <= ahora) return null;
 
