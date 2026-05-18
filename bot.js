@@ -40,7 +40,7 @@ function obtenerSiguienteId(chatId, callback) {
 bot.on("message",(msg)=>{
 
  const chatId = msg.chat.id;
- const texto = msg.text;
+ const texto = (msg.text || "").trim().toLowerCase();
 
  // detectar si está reprogramando
  if(reprogramaciones[chatId]){
@@ -134,18 +134,25 @@ function parseFecha(fechaStr,horaStr){
   return null;
  }
 
-     const partesHora = horaStr.split(":");
+ const partesHora = horaStr.split(":");
 
-     if(partesHora.length !== 2) return null;
+ if(partesHora.length !== 2) return null;
 
-     const horas = parseInt(partesHora[0]);
-     const minutos = parseInt(partesHora[1]);
+ const horas = parseInt(partesHora[0]);
+ const minutos = parseInt(partesHora[1]);
 
-     if(isNaN(horas) || isNaN(minutos)) return null;
+ if(isNaN(horas) || isNaN(minutos)) return null;
 
-     fecha.setHours(horas);
-     fecha.setMinutes(minutos);
-     fecha.setSeconds(0);
+ if(horas < 0 || horas > 23) return null;
+ if(minutos < 0 || minutos > 59) return null;
+
+ fecha.setHours(horas);
+ fecha.setMinutes(minutos);
+ fecha.setSeconds(0);
+ fecha.setMilliseconds(0);
+
+ // ajuste horario Argentina (UTC-3)
+ fecha = new Date(fecha.getTime() + (3 * 60 * 60 * 1000));
 
  if(fecha <= ahora) return null;
 
